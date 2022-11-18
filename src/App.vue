@@ -1,5 +1,7 @@
 <template>
-  <beer-info v-if="beers.length>0" :beers="beers" class="main-container"></beer-info>
+  <beer-info v-if="beers.length>0"
+             :beers="beers">
+  </beer-info>
 </template>
 
 <script>
@@ -26,13 +28,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.main-container {
-  font-family: system-ui;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-  background-color: #2c3e50;
-}
-</style>

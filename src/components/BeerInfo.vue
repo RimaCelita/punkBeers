@@ -1,6 +1,8 @@
 <template>
-  <div>
-  <div class="beer-info-container" v-for="beer in beers" :key="beer.id">
+  <div class="main-container">
+    <b-form-input v-model.trim="beerName" placeholder="Search by Beer name"></b-form-input>
+  <div class="beer-info-container" v-for="beer in filteredBeers" :key="beer.id">
+
     <div>
       <img class="beer-image" :src=beer.image_url>
     </div>
@@ -30,17 +32,35 @@ export default {
   name:"BeerInfo",
   props: {
     beers: Array
+  },
+  data() {
+    return {
+      beerName: ''
+    }
+  },
+  computed: {
+    filteredBeers(){
+      if(!this.beerName) return this.beers;
+
+      return this.beers.filter(beer => beer.name.toUpperCase().startsWith(this.beerName.toUpperCase()))
+    }
   }
 }
 </script>
 
 <style lang="css" scoped>
+.main-container {
+  margin-left:30%;
+  margin-right:30%;
+
+  text-align: center;
+  margin-top: 60px;
+}
+
 .beer-info-container {
   display: flex;
   height:500px;
   margin-top: 50px;
-  margin-left:30%;
-  margin-right:30%;
   background-color: red;
 }
 
