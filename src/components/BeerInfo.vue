@@ -35,15 +35,39 @@ export default {
   },
   data() {
     return {
-      beerName: ''
+      beerName: '',
+      bottom: false,
     }
+  },
+  watch: {
+    bottom(newValue) {
+      if (newValue) {
+        this.$emit('loadMoreBeers')
+      }
+    }
+  },
+  mounted() {
+    window.addEventListener("scroll", () => {
+      this.bottom = this.bottomVisible();
+    });
   },
   computed: {
     filteredBeers(){
+      console.log(this.beers)
       if(!this.beerName) return this.beers;
 
-      return this.beers.filter(beer => beer.name.toUpperCase().startsWith(this.beerName.toUpperCase()))
+      const name = this.beerName.toUpperCase();
+      return this.beers.filter(beer => beer.name.startsWith(name) || beer.name.includes(name))
     }
+  },
+  methods: {
+    bottomVisible() {
+      const scrollY = window.scrollY;
+      const visible = document.documentElement.clientHeight;
+      const pageHeight = document.documentElement.scrollHeight;
+      const bottomOfPage = visible + scrollY >= pageHeight;
+      return bottomOfPage || pageHeight < visible;
+    },
   }
 }
 </script>

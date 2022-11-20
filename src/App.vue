@@ -1,6 +1,7 @@
 <template>
   <beer-info v-if="beers.length>0"
-             :beers="beers">
+             :beers="beers"
+             @loadMoreBeers="loadMoreBeers()">
   </beer-info>
 </template>
 
@@ -14,16 +15,31 @@ export default {
   },
   data(){
     return {
-      beers: []
+      beers: [],
+      page:1,
+      ipp:80,  // 1 to 80
+      totalItems: 325 // first 4 pages -> 80 + 5th page 5 items
     }
   },
   mounted() {
-   const response = this.getUser();
+   const response = this.getBeers(this.page);
     response.then(res => { this.beers = res.data})
   },
   methods: {
-     async getUser() {
-     return await axios.get('https://api.punkapi.com/v2/beers?brewed_before=11-2012&abv_gt=6');
+     async getBeers(page) {
+     return await axios.get(`https://api.punkapi.com/v2/beers?page=${page}&per_page=${this.ipp}`);
+    },
+    loadMoreBeers() {
+      this.page++;
+     if(Math.ceil(
+         this.totalItems /(this.page * this.ipp)) > 1){
+       const response = this.getBeers(this.page);
+       response.then(res => { this.beers.push(...res.data)})
+     } else {
+       console.log('no more beers to list!!')
+     }
+
+
     }
   }
 }
